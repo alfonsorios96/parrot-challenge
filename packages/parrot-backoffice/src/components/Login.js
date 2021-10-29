@@ -10,12 +10,43 @@ export const Login = ({context}) => {
     const history = useHistory();
     const auth = useContext(context);
     const location = useLocation();
-    const {from} = location.state || {from: {pathname: '/'}};
+    const {from} = location.state || {from: {pathname: '/protected'}};
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState([]);
     const [validations, setValidations] = useState([]);
+
+    useEffect(() => {
+        const access_token = sessionStorage.getItem('access_token') || '';
+        if (access_token !== '') {
+            const requester = new RequestManager('http://api-staging.parrot.rest');
+            requester.request({
+                endpoint: 'api/auth/token/test',
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            }).then(payload => {
+                if (payload.status === 'ok') {
+                    auth.signin(() => {
+                        dispatch(saveSession({
+                            access_token: sessionStorage.getItem('access_token'),
+                            refresh_token: sessionStorage.getItem('refresh_token')
+                        }));
+                    });
+                    history.replace(from);
+                }
+            }).catch(error => {
+                // TODO Handle error
+                history.replace(from);
+            }).finally(() => {
+                // TODO Finally
+            })
+        }
+        return function cleanup() {
+            // TODO Clean listeners
+        };
+    });
 
     const validateForm = () => {
         return username.length > 0 && password.length > 0;
@@ -86,29 +117,6 @@ export const Login = ({context}) => {
             console.log('[ERROR]', e);
         }
     };
-
-    useEffect(() => {
-        const access_token = sessionStorage.getItem('access_token') || '';
-        if (access_token !== '') {
-            const requester = new RequestManager('http://api-staging.parrot.rest');
-            requester.request({
-                endpoint: 'api/auth/token/test',
-                headers: {
-                    'Authorization': `Bearer ${access_token}`
-                }
-            }).then(payload => {
-                if (payload.status === 'ok') {
-                    auth.signin(() => {
-                        history.replace(from);
-                    });
-                }
-            }).catch(error => {
-                // TODO Handle error
-            }).finally(() => {
-                // TODO Finally
-            })
-        }
-    });
 
     const [showModal, setShowModal] = useState(false);
 

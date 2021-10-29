@@ -1,15 +1,16 @@
-import React, {useContext, createContext, useState} from 'react';
+import React, {useContext, createContext, useState, useEffect} from 'react';
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link,
-    Redirect
+    Redirect, useHistory, useLocation
 } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-import {resetSession} from "../reducers/user";
+import {resetSession, saveSession} from "../reducers/user";
 import {Home} from './Home';
 import {Login} from './Login';
+import {RequestManager} from "@parrot/requester-manager";
 
 const fakeAuth = {
     isAuthenticated: false,
@@ -101,21 +102,56 @@ const ProvideAuth = ({children}) => {
 // screen if you're not yet authenticated.
 const PrivateRoute = ({children, ...rest}) => {
     const auth = useContext(authContext);
+    const history = useHistory();
+    const location = useLocation();
+    const {from} = location.state || {from: {pathname: '/'}};
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const access_token = sessionStorage.getItem('access_token') || '';
+        if (access_token !== '') {
+            const requester = new RequestManager('http://api-staging.parrot.rest');
+            requester.request({
+                endpoint: 'api/auth/token/test',
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            }).then(payload => {
+                if (payload.status === 'ok') {
+                    auth.signin(() => {
+                        dispatch(saveSession({
+                            access_token: sessionStorage.getItem('access_token'),
+                            refresh_token: sessionStorage.getItem('refresh_token')
+                        }));
+                    });
+                }
+            }).catch(error => {
+                // TODO Handle error
+                history.replace(from);
+            }).finally(() => {
+                // TODO Finally
+            })
+        }
+        return function cleanup() {
+            // TODO Clean listeners
+        };
+    });
 
     return (
         <Route
             {...rest}
-            render={({location}) =>
-                auth.user ? (
-                    children
-                ) : (
-                    <Redirect
-                        to={{
-                            pathname: "/login",
-                            state: {from: location}
-                        }}
-                    />
-                )
+            render={({location}) => {
+                    return fakeAuth.isAuthenticated ? (
+                        children
+                    ) : (
+                        <Redirect
+                            to={{
+                                pathname: "/login",
+                                state: {from: location}
+                            }}
+                        />
+                    );
+                }
             }
         />
     );
