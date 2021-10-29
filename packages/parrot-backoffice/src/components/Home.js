@@ -5,7 +5,7 @@ import {RequestManager} from '@parrot/requester-manager';
 import {useSelector} from 'react-redux';
 import {selectUser} from '../reducers/user';
 
-import './Home.css';
+import './Home.scss';
 
 export const Home = ({context, host}) => {
     const history = useHistory();
