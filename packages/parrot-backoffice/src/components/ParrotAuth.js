@@ -10,37 +10,7 @@ import {
     useLocation
 } from 'react-router-dom';
 import {RequestManager} from '@parrot/requester-manager';
-
-export const ParrotAuth = () => {
-    return (
-        <ProvideAuth>
-            <Router>
-                <div>
-                    <ul>
-                        <li>
-                            <Link to="/public">Public Page</Link>
-                        </li>
-                        <li>
-                            <Link to="/protected">Protected Page</Link>
-                        </li>
-                    </ul>
-
-                    <Switch>
-                        <Route path="/public">
-                            <PublicPage/>
-                        </Route>
-                        <Route path="/login">
-                            <LoginPage/>
-                        </Route>
-                        <PrivateRoute path="/protected">
-                            <ProtectedPage/>
-                        </PrivateRoute>
-                    </Switch>
-                </div>
-            </Router>
-        </ProvideAuth>
-    );
-};
+import {Home} from './Home';
 
 const fakeAuth = {
     isAuthenticated: false,
@@ -59,19 +29,6 @@ const fakeAuth = {
  * refer to: https://usehooks.com/useAuth/
  */
 const authContext = createContext();
-
-function ProvideAuth({children}) {
-    const auth = useProvideAuth();
-    return (
-        <authContext.Provider value={auth}>
-            {children}
-        </authContext.Provider>
-    );
-}
-
-function useAuth() {
-    return useContext(authContext);
-}
 
 function useProvideAuth() {
     const [user, setUser] = useState(null);
@@ -99,10 +56,50 @@ function useProvideAuth() {
     };
 }
 
+export const ParrotAuth = () => {
+    return (
+        <ProvideAuth>
+            <Router>
+                <div>
+                    <ul>
+                        <li>
+                            <Link to="/public">Public Page</Link>
+                        </li>
+                        <li>
+                            <Link to="/protected">Protected Page</Link>
+                        </li>
+                    </ul>
+
+                    <Switch>
+                        <Route path="/public">
+                            <PublicPage/>
+                        </Route>
+                        <Route path="/login">
+                            <LoginPage/>
+                        </Route>
+                        <PrivateRoute path="/protected">
+                            <Home context={authContext}/>
+                        </PrivateRoute>
+                    </Switch>
+                </div>
+            </Router>
+        </ProvideAuth>
+    );
+};
+
+function ProvideAuth({children}) {
+    const auth = useProvideAuth();
+    return (
+        <authContext.Provider value={auth}>
+            {children}
+        </authContext.Provider>
+    );
+}
+
 // A wrapper for <Route> that redirects to the login
 // screen if you're not yet authenticated.
 function PrivateRoute({children, ...rest}) {
-    let auth = useAuth();
+    let auth = useContext(authContext);
     return (
         <Route
             {...rest}
@@ -126,19 +123,6 @@ function PublicPage() {
     return <h3>Public</h3>;
 }
 
-function ProtectedPage() {
-    const history = useHistory();
-    const auth = useAuth();
-
-    return (<div>
-        <h3>Protected</h3>
-
-        <Button onClick={() => {
-            auth.signout(() => history.push('/login'));
-        }}>Cerrar sesión</Button>
-    </div>);
-}
-
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -147,7 +131,7 @@ function LoginPage() {
 
     const history = useHistory();
     const location = useLocation();
-    const auth = useAuth();
+    const auth = useContext(authContext);
 
     const {from} = location.state || {from: {pathname: "/"}};
 
