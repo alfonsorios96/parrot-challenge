@@ -1,22 +1,163 @@
 import {Button, Form, Toast} from 'react-bootstrap';
-import './Login.css';
-import {useState} from 'react';
+import React, {useContext, createContext, useState, useEffect} from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    Redirect,
+    useHistory,
+    useLocation
+} from 'react-router-dom';
 import {RequestManager} from '@parrot/requester-manager';
 
-const Login = (props) => {
+export const ParrotAuth = () => {
+    return (
+        <ProvideAuth>
+            <Router>
+                <div>
+                    <ul>
+                        <li>
+                            <Link to="/public">Public Page</Link>
+                        </li>
+                        <li>
+                            <Link to="/protected">Protected Page</Link>
+                        </li>
+                    </ul>
 
+                    <Switch>
+                        <Route path="/public">
+                            <PublicPage/>
+                        </Route>
+                        <Route path="/login">
+                            <LoginPage/>
+                        </Route>
+                        <PrivateRoute path="/protected">
+                            <ProtectedPage/>
+                        </PrivateRoute>
+                    </Switch>
+                </div>
+            </Router>
+        </ProvideAuth>
+    );
+};
+
+const fakeAuth = {
+    isAuthenticated: false,
+    signin(cb) {
+        fakeAuth.isAuthenticated = true;
+        cb();
+    },
+    signout(cb) {
+        fakeAuth.isAuthenticated = false;
+        cb();
+    }
+};
+
+/** For more details on
+ * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
+ * refer to: https://usehooks.com/useAuth/
+ */
+const authContext = createContext();
+
+function ProvideAuth({children}) {
+    const auth = useProvideAuth();
+    return (
+        <authContext.Provider value={auth}>
+            {children}
+        </authContext.Provider>
+    );
+}
+
+function useAuth() {
+    return useContext(authContext);
+}
+
+function useProvideAuth() {
+    const [user, setUser] = useState(null);
+
+    const signin = cb => {
+        return fakeAuth.signin(() => {
+            setUser("user");
+            cb();
+        });
+    };
+
+    const signout = cb => {
+        return fakeAuth.signout(() => {
+            setUser(null);
+            sessionStorage.removeItem('access_token');
+            sessionStorage.removeItem('refresh_token');
+            cb();
+        });
+    };
+
+    return {
+        user,
+        signin,
+        signout
+    };
+}
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+function PrivateRoute({children, ...rest}) {
+    let auth = useAuth();
+    return (
+        <Route
+            {...rest}
+            render={({location}) =>
+                auth.user ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {from: location}
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
+
+function PublicPage() {
+    return <h3>Public</h3>;
+}
+
+function ProtectedPage() {
+    const history = useHistory();
+    const auth = useAuth();
+
+    return (<div>
+        <h3>Protected</h3>
+
+        <Button onClick={() => {
+            auth.signout(() => history.push('/login'));
+        }}>Cerrar sesión</Button>
+    </div>);
+}
+
+function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errors, setErrors] = useState([]);
     const [validations, setValidations] = useState([]);
 
+    const history = useHistory();
+    const location = useLocation();
+    const auth = useAuth();
+
+    const {from} = location.state || {from: {pathname: "/"}};
+
     const validateForm = () => {
         return username.length > 0 && password.length > 0;
     };
 
-    const handleSubmit = async (event) => {
+    const login = async (event) => {
         event.preventDefault();
-        const requester = new RequestManager(props.host);
+        const requester = new RequestManager('http://api-staging.parrot.rest');
         try {
             const response = await requester.request({
                 endpoint: 'api/auth/token',
@@ -72,10 +213,37 @@ const Login = (props) => {
             if (response.refresh && response.refresh !== '') {
                 sessionStorage.setItem('refresh_token', response.refresh);
             }
+            auth.signin(() => {
+                history.replace(from);
+            });
         } catch (e) {
             console.log('[ERROR]', e);
         }
     };
+
+    useEffect(() => {
+        const access_token = sessionStorage.getItem('access_token') || '';
+        // const refresh_token = sessionStorage.getItem('refresh_token') || '';
+        if (access_token !== '') {
+            const requester = new RequestManager('http://api-staging.parrot.rest');
+            requester.request({
+                endpoint: 'api/auth/token/test',
+                headers: {
+                    'Authorization': `Bearer ${access_token}`
+                }
+            }).then(payload => {
+                if (payload.status === 'ok') {
+                    auth.signin(() => {
+                        history.replace(from);
+                    });
+                }
+            }).catch(error => {
+                // TODO Handle error
+            }).finally(() => {
+                // TODO Finally
+            })
+        }
+    });
 
     const [showModal, setShowModal] = useState(false);
 
@@ -88,9 +256,14 @@ const Login = (props) => {
         return setShowModal(!showModal);
     };
 
+    const fillDemoData = () => {
+        setUsername('android-challenge@parrotsoftware.io');
+        setPassword('8mngDhoPcB3ckV7X');
+    };
+
     return (
         <div className="Login">
-            <Form onSubmit={handleSubmit}>
+            <Form onSubmit={login}>
                 <Form.Group size="lg" controlId="email">
                     <Form.Label>Usuario</Form.Label>
                     <Form.Control
@@ -108,8 +281,11 @@ const Login = (props) => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button size="lg" type="submit" disabled={!validateForm()}>
+                <Button size="md" type="submit" disabled={!validateForm()}>
                     Iniciar sesión
+                </Button>
+                <Button size="md" type="button" onClick={fillDemoData}>
+                    Llenar datos de prueba
                 </Button>
             </Form>
 
@@ -138,6 +314,4 @@ const Login = (props) => {
             </Toast>
         </div>
     );
-};
-
-export default Login;
+}
