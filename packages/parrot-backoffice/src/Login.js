@@ -1,5 +1,4 @@
 import {Button, Form, Toast} from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 import {useState} from 'react';
 import {RequestManager} from '@parrot/requester-manager';
@@ -109,7 +108,7 @@ const Login = (props) => {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button block size="lg" type="submit" disabled={!validateForm()}>
+                <Button size="lg" type="submit" disabled={!validateForm()}>
                     Iniciar sesión
                 </Button>
             </Form>
