@@ -26,7 +26,7 @@ export class RequestManager {
         if (config.callbacks && config.callbacks.length > 0) {
             for (const callback of config.callbacks) {
                 if (response.status === callback.status) {
-                    callback.action();
+                    callback.action(response);
                 }
             }
         }

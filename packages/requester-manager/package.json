@@ -1,0 +1,16 @@
+{
+  "name": "@parrot/requester-manager",
+  "version": "1.0.0",
+  "description": "Wrapper for API requests",
+  "main": "RequestManager.js",
+  "module": "RequestManager.js",
+  "scripts": {
+    "start": "web-dev-server"
+  },
+  "devDependencies": {
+    "@web/dev-server": "^0.1.17"
+  },
+  "keywords": [],
+  "author": "Manuel Rios <malforime@gmail.com>",
+  "license": "ISC"
+}
