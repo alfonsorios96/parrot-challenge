@@ -2,12 +2,15 @@ import {useContext, useState, useEffect} from 'react';
 import {useHistory, useLocation} from 'react-router-dom';
 import {RequestManager} from '@parrot/requester-manager';
 import {Button, Form, Toast} from 'react-bootstrap';
+import {useDispatch} from 'react-redux';
+import {saveSession} from "../reducers/user";
 
 export const Login = ({context}) => {
+    const dispatch = useDispatch();
     const history = useHistory();
     const auth = useContext(context);
     const location = useLocation();
-    const {from} = location.state || {from: {pathname: "/"}};
+    const {from} = location.state || {from: {pathname: '/'}};
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -22,7 +25,7 @@ export const Login = ({context}) => {
         event.preventDefault();
         const requester = new RequestManager('http://api-staging.parrot.rest');
         try {
-            const response = await requester.request({
+            const {access: access_token, refresh: refresh_token} = await requester.request({
                 endpoint: 'api/auth/token',
                 method: 'POST',
                 body: {
@@ -70,15 +73,15 @@ export const Login = ({context}) => {
                     }
                 ]
             });
-            if (response.access && response.access !== '') {
-                sessionStorage.setItem('access_token', response.access);
-            }
-            if (response.refresh && response.refresh !== '') {
-                sessionStorage.setItem('refresh_token', response.refresh);
-            }
-            auth.signin(() => {
-                history.replace(from);
-            });
+            if (access_token && access_token !== '' && refresh_token && refresh_token !== '')
+                auth.signin(() => {
+                    dispatch(saveSession({
+                        access_token, refresh_token
+                    }));
+                    sessionStorage.setItem('access_token', access_token);
+                    sessionStorage.setItem('refresh_token', refresh_token);
+                    history.replace(from);
+                });
         } catch (e) {
             console.log('[ERROR]', e);
         }
@@ -86,7 +89,6 @@ export const Login = ({context}) => {
 
     useEffect(() => {
         const access_token = sessionStorage.getItem('access_token') || '';
-        // const refresh_token = sessionStorage.getItem('refresh_token') || '';
         if (access_token !== '') {
             const requester = new RequestManager('http://api-staging.parrot.rest');
             requester.request({

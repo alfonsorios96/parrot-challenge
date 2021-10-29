@@ -6,6 +6,8 @@ import {
     Link,
     Redirect
 } from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {resetSession} from "../reducers/user";
 import {Home} from './Home';
 import {Login} from './Login';
 
@@ -25,9 +27,10 @@ const fakeAuth = {
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
  */
-const authContext = createContext();
+const authContext = createContext(undefined, undefined);
 
 const useProvideAuth = () => {
+    const dispatch = useDispatch();
     const [user, setUser] = useState(null);
 
     const signin = cb => {
@@ -39,9 +42,10 @@ const useProvideAuth = () => {
 
     const signout = cb => {
         return fakeAuth.signout(() => {
-            setUser(null);
+            dispatch(resetSession());
             sessionStorage.removeItem('access_token');
             sessionStorage.removeItem('refresh_token');
+            setUser(null);
             cb();
         });
     };
@@ -97,6 +101,7 @@ const ProvideAuth = ({children}) => {
 // screen if you're not yet authenticated.
 const PrivateRoute = ({children, ...rest}) => {
     const auth = useContext(authContext);
+
     return (
         <Route
             {...rest}
