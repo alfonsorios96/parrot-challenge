@@ -5,7 +5,7 @@ import {Button, Form, Toast} from 'react-bootstrap';
 import {useDispatch} from 'react-redux';
 import {saveSession} from "../reducers/user";
 
-export const Login = ({context}) => {
+export const Login = ({context, host}) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const auth = useContext(context);
@@ -20,7 +20,7 @@ export const Login = ({context}) => {
     useEffect(() => {
         const access_token = sessionStorage.getItem('access_token') || '';
         if (access_token !== '') {
-            const requester = new RequestManager('http://api-staging.parrot.rest');
+            const requester = new RequestManager(host);
             requester.request({
                 endpoint: 'api/auth/token/test',
                 headers: {
@@ -54,7 +54,7 @@ export const Login = ({context}) => {
 
     const login = async (event) => {
         event.preventDefault();
-        const requester = new RequestManager('http://api-staging.parrot.rest');
+        const requester = new RequestManager(host);
         try {
             const {access: access_token, refresh: refresh_token} = await requester.request({
                 endpoint: 'api/auth/token',

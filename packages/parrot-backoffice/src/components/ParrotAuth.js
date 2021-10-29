@@ -24,6 +24,8 @@ const fakeAuth = {
     }
 };
 
+const API_REST_HOST = 'http://api-staging.parrot.rest';
+
 /** For more details on
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
  * refer to: https://usehooks.com/useAuth/
@@ -65,22 +67,16 @@ export const ParrotAuth = () => {
                 <div>
                     <ul>
                         <li>
-                            <Link to="/public">Public Page</Link>
-                        </li>
-                        <li>
                             <Link to="/protected">Protected Page</Link>
                         </li>
                     </ul>
 
                     <Switch>
-                        <Route path="/public">
-                            <PublicPage/>
-                        </Route>
                         <Route path="/login">
-                            <Login context={authContext}/>
+                            <Login context={authContext} host={API_REST_HOST}/>
                         </Route>
                         <PrivateRoute path="/protected">
-                            <Home context={authContext}/>
+                            <Home context={authContext} host={API_REST_HOST}/>
                         </PrivateRoute>
                     </Switch>
                 </div>
@@ -110,7 +106,7 @@ const PrivateRoute = ({children, ...rest}) => {
     useEffect(() => {
         const access_token = sessionStorage.getItem('access_token') || '';
         if (access_token !== '') {
-            const requester = new RequestManager('http://api-staging.parrot.rest');
+            const requester = new RequestManager(API_REST_HOST);
             requester.request({
                 endpoint: 'api/auth/token/test',
                 headers: {
@@ -155,8 +151,4 @@ const PrivateRoute = ({children, ...rest}) => {
             }
         />
     );
-};
-
-const PublicPage = () => {
-    return <h3>Public</h3>;
 };
