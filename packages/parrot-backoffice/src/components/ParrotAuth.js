@@ -1,4 +1,5 @@
 import React, {useContext, createContext, useState, useEffect} from 'react';
+import Config from '../config.json';
 import {
     BrowserRouter as Router,
     Switch,
@@ -24,7 +25,7 @@ const fakeAuth = {
     }
 };
 
-const API_REST_HOST = 'http://api-staging.parrot.rest';
+const API_REST_HOST = Config.BASE_URL || 'http://api-staging.parrot.rest';
 
 /** For more details on
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
@@ -137,17 +138,17 @@ const PrivateRoute = ({children, ...rest}) => {
         <Route
             {...rest}
             render={({location}) => {
-                    return fakeAuth.isAuthenticated ? (
-                        children
-                    ) : (
-                        <Redirect
-                            to={{
-                                pathname: "/login",
-                                state: {from: location}
-                            }}
-                        />
-                    );
-                }
+                return fakeAuth.isAuthenticated ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login",
+                            state: {from: location}
+                        }}
+                    />
+                );
+            }
             }
         />
     );
