@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Requester Manager DEMO</title>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+    import {RequestManager} from '../RequestManager';
+
+    (async (RequestManager) => {
+        const requester = new RequestManager('https://randomuser.me');
+        const payload = await requester.request({
+            endpoint: 'api'
+        });
+        document.querySelector('#root').innerHTML = `
+            <div>
+                <p>Users</p>
+                <ul>
+                ${payload.results.map(user => `
+                    <li>Name: ${user.name.title} ${user.name.last}, ${user.name.first}</li>
+                `)}
+                </ul>
+            </div>
+        `;
+    })(RequestManager);
+</script>
+</body>
+</html>
