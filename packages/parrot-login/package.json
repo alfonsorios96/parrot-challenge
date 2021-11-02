@@ -1,0 +1,35 @@
+{
+  "name": "@parrot/login-page",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/ParrotLogin.js",
+  "module": "src/ParrotLogin.js",
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^5.1.3",
+    "react": "^17.0.2",
+    "react-bootstrap": "^2.0.1",
+    "react-dom": "^17.0.2",
+    "react-redux": "^7.2.6"
+  },
+  "devDependencies": {
+    "react-scripts": "^4.0.3"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

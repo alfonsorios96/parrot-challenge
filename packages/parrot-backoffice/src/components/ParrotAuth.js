@@ -1,5 +1,7 @@
 import React, {useContext, createContext, useState, useEffect} from 'react';
 import Config from '../config.json';
+import {Provider} from 'react-redux';
+import store from '../store';
 import {
     BrowserRouter as Router,
     Switch,
@@ -8,10 +10,11 @@ import {
     Redirect, useHistory, useLocation
 } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-import {resetSession, saveSession} from "../reducers/user";
+import {resetSession, saveSession} from '../reducers/user';
 import {Home} from './Home';
 import {Login} from './Login';
-import {RequestManager} from "@parrot/requester-manager";
+import {RequestManager} from '@parrot/requester-manager';
+import ParrotLogin from '@parrot/login-page';
 
 const fakeAuth = {
     isAuthenticated: false,
@@ -25,7 +28,7 @@ const fakeAuth = {
     }
 };
 
-const API_REST_HOST = Config.BASE_URL || 'http://api-staging.parrot.rest';
+const API_REST_HOST = Config.BASE_URL || 'https://api-staging.parrot.rest';
 
 /** For more details on
  * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
@@ -70,9 +73,17 @@ export const ParrotAuth = () => {
                         <li>
                             <Link to="/protected">Protected Page</Link>
                         </li>
+                        <li>
+                            <Link to="/public">Public</Link>
+                        </li>
                     </ul>
 
                     <Switch>
+                        <Route path="/public">
+                            <Provider store={store}>
+                                <ParrotLogin></ParrotLogin>
+                            </Provider>
+                        </Route>
                         <Route path="/login">
                             <Login context={authContext} host={API_REST_HOST}/>
                         </Route>
