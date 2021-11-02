@@ -7,6 +7,8 @@ import {saveSession, toggleSpinner} from '@parrot/store';
 
 import './ParrotLogin.scss';
 
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
 const ParrotLogin = ({context, host}) => {
     const dispatch = useDispatch();
     const history = useHistory();
@@ -57,7 +59,7 @@ const ParrotLogin = ({context, host}) => {
     }, []);
 
     const validateForm = () => {
-        return username.length > 0 && password.length > 0;
+        return EMAIL_REGEX.test(username) && password.length > 0;
     };
 
     const login = async (event) => {
