@@ -12,7 +12,6 @@ import {
 import {useDispatch} from 'react-redux';
 import {resetSession, saveSession} from '../reducers/user';
 import {Home} from './Home';
-import {Login} from './Login';
 import {RequestManager} from '@parrot/requester-manager';
 import ParrotLogin from '@parrot/login-page';
 
@@ -73,19 +72,13 @@ export const ParrotAuth = () => {
                         <li>
                             <Link to="/protected">Protected Page</Link>
                         </li>
-                        <li>
-                            <Link to="/public">Public</Link>
-                        </li>
                     </ul>
 
                     <Switch>
-                        <Route path="/public">
-                            <Provider store={store}>
-                                <ParrotLogin></ParrotLogin>
-                            </Provider>
-                        </Route>
                         <Route path="/login">
-                            <Login context={authContext} host={API_REST_HOST}/>
+                            <Provider store={store}>
+                                <ParrotLogin context={authContext} host={API_REST_HOST}></ParrotLogin>
+                            </Provider>
                         </Route>
                         <PrivateRoute path="/protected">
                             <Home context={authContext} host={API_REST_HOST}/>
