@@ -4,6 +4,9 @@ import {RequestManager} from '@parrot/requester-manager';
 import {Button, Form, Toast} from 'react-bootstrap';
 import {useDispatch} from 'react-redux';
 import {saveSession} from './reducers/user';
+import {toggleSpinner} from './reducers/spinner';
+
+import './ParrotLogin.scss';
 
 const ParrotLogin = ({context, host}) => {
     const dispatch = useDispatch();
@@ -25,6 +28,12 @@ const ParrotLogin = ({context, host}) => {
                 endpoint: 'api/auth/token/test',
                 headers: {
                     'Authorization': `Bearer ${access_token}`
+                },
+                before: () => {
+                    dispatch(toggleSpinner(true));
+                },
+                after: () => {
+                    dispatch(toggleSpinner(false));
                 }
             }).then(payload => {
                 if (payload.status === 'ok') {
@@ -46,7 +55,7 @@ const ParrotLogin = ({context, host}) => {
         return function cleanup() {
             // TODO Clean listeners
         };
-    });
+    }, []);
 
     const validateForm = () => {
         return username.length > 0 && password.length > 0;
@@ -102,7 +111,13 @@ const ParrotLogin = ({context, host}) => {
                             })
                         }
                     }
-                ]
+                ],
+                before: () => {
+                    dispatch(toggleSpinner(true));
+                },
+                after: () => {
+                    dispatch(toggleSpinner(false));
+                }
             });
             if (access_token && access_token !== '' && refresh_token && refresh_token !== '')
                 auth.signin(() => {

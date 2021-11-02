@@ -1,4 +1,4 @@
-import React, {useContext, createContext, useState, useEffect} from 'react';
+import React, {useContext, createContext, useEffect} from 'react';
 import Config from '../config.json';
 import {Provider} from 'react-redux';
 import store from '../store';
@@ -9,11 +9,13 @@ import {
     Link,
     Redirect, useHistory, useLocation
 } from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {resetSession, saveSession} from '../reducers/user';
 import {RequestManager} from '@parrot/requester-manager';
 import ParrotLogin from '@parrot/login-page';
 import ParrotHome from '@parrot/home-page';
+import {Spinner} from 'react-bootstrap';
+import {isShowing, toggleSpinner} from '../reducers/spinner';
 
 const Auth = {
     isAuthenticated: false,
@@ -29,10 +31,6 @@ const Auth = {
 
 const API_REST_HOST = Config.BASE_URL || 'https://api-staging.parrot.rest';
 
-/** For more details on
- * `authContext`, `ProvideAuth`, `useAuth` and `useProvideAuth`
- * refer to: https://usehooks.com/useAuth/
- */
 const authContext = createContext(undefined, undefined);
 
 const useProvideAuth = () => {
@@ -60,6 +58,7 @@ const useProvideAuth = () => {
 };
 
 export const ParrotAuth = () => {
+    const spinnerIsShowing = useSelector(isShowing);
     return (
         <ProvideAuth>
             <Router>
@@ -69,6 +68,10 @@ export const ParrotAuth = () => {
                             <Link to="/protected">Protected Page</Link>
                         </li>
                     </ul>
+
+                    <Spinner className={'spinner'} animation="border" role="status" hidden={!spinnerIsShowing}>
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
 
                     <Switch>
                         <Route path="/login">
@@ -114,6 +117,12 @@ const PrivateRoute = ({children, ...rest}) => {
                 endpoint: 'api/auth/token/test',
                 headers: {
                     'Authorization': `Bearer ${access_token}`
+                },
+                before: () => {
+                    dispatch(toggleSpinner(true));
+                },
+                after: () => {
+                    dispatch(toggleSpinner(false));
                 }
             }).then(payload => {
                 if (payload.status === 'ok') {
@@ -134,7 +143,7 @@ const PrivateRoute = ({children, ...rest}) => {
         return function cleanup() {
             // TODO Clean listeners
         };
-    });
+    }, []);
 
     return (
         <Route

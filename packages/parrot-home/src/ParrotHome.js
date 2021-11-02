@@ -1,36 +1,27 @@
 import {useHistory} from 'react-router-dom';
 import {Button, Accordion, Form} from 'react-bootstrap';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useState} from 'react';
 import {RequestManager} from '@parrot/requester-manager';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {selectUser} from './reducers/user';
 
 import './Home.scss';
+import {toggleSpinner} from './reducers/spinner';
 
 const ParrotHome = ({context, host}) => {
+    const dispatch = useDispatch();
     const history = useHistory();
     const auth = useContext(context);
     const [user] = useState(useSelector(selectUser));
     const [categories, setCategories] = useState([]);
-    const [stores, setStores] = useState([]);
-
-    useEffect(() => {
-        const requester = new RequestManager(host);
-        requester.request({
-            endpoint: 'api/v1/users/me',
-            headers: {
-                'Authorization': `Bearer ${user?.access_token}`
-            }
-        }).then(({status, result}) => {
-            if (status === 'ok') {
-                setStores(result);
-            }
-        }).catch(error => {
-            // TODO Handle Error
-        });
-        return function cleanup() {
-            // TODO Clean listeners
-        };
+    const [_store] = useState({
+        "uuid": "e7f46731-1654-4ba3-be83-408ac5255838",
+        "name": "Store Android Challenge",
+        "availabilityState": "OPEN",
+        "providers": [],
+        "config": {
+            "brandColor": "#FF0000"
+        }
     });
 
     const parseCategories = (products) => {
@@ -55,6 +46,12 @@ const ParrotHome = ({context, host}) => {
             endpoint: `api/v1/products/?store=${uuid}`,
             headers: {
                 'Authorization': `Bearer ${user?.access_token}`
+            },
+            before: () => {
+                dispatch(toggleSpinner(true));
+            },
+            after: () => {
+                dispatch(toggleSpinner(false));
             }
         });
         if (status === 'ok') {
@@ -71,6 +68,12 @@ const ParrotHome = ({context, host}) => {
             headers: {'Authorization': `Bearer ${user?.access_token}`},
             body: {
                 availability: event.target.checked ? 'AVAILABLE' : 'UNAVAILABLE'
+            },
+            before: () => {
+                dispatch(toggleSpinner(true));
+            },
+            after: () => {
+                dispatch(toggleSpinner(false));
             }
         });
         if (status === 'ok') {
@@ -81,8 +84,6 @@ const ParrotHome = ({context, host}) => {
                 }
                 return category;
             }));
-        } else {
-            // If not changed
         }
     };
 
@@ -109,29 +110,25 @@ const ParrotHome = ({context, host}) => {
     </div>);
 
     return (<div>
-        {stores && stores.stores && stores.stores.map(store => (
-            <div key={store.uuid}>
-                <h3>{store.name}</h3>
-                <Button onClick={getProducts} data-uuid={store.uuid}>Ver productos</Button>
-                <Button onClick={() => {
-                    auth.signout(() => history.push('/login'));
-                }}>Cerrar sesión</Button>
-                <hr/>
-                <div className="products">
-                    {categories && categories.length > 0 && categories.map((category, categoryIndex) => (
-                        <div className="product-item" key={category.uuid}>
-                            <Accordion defaultActiveKey="0" flush>
-                                <Accordion.Item eventKey={`${categoryIndex}`}>
-                                    <Accordion.Header>{category.name}</Accordion.Header>
-                                    <Accordion.Body>
-                                        {categoryElement(category.products)}
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Accordion>
-                        </div>))}
-                </div>
-            </div>
-        ))}
+        <h3>{_store.name}</h3>
+        <Button onClick={getProducts} data-uuid={_store.uuid}>Ver productos</Button>
+        <Button onClick={() => {
+            auth.signout(() => history.push('/login'));
+        }}>Cerrar sesión</Button>
+        <hr/>
+        <div className="products">
+            {categories && categories.length > 0 && categories.map((category, categoryIndex) => (
+                <div className="product-item" key={category.uuid}>
+                    <Accordion defaultActiveKey="0" flush>
+                        <Accordion.Item eventKey={`${categoryIndex}`}>
+                            <Accordion.Header>{category.name}</Accordion.Header>
+                            <Accordion.Body>
+                                {categoryElement(category.products)}
+                            </Accordion.Body>
+                        </Accordion.Item>
+                    </Accordion>
+                </div>))}
+        </div>
     </div>);
 }
 
