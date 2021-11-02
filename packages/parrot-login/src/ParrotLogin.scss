@@ -6,3 +6,16 @@
   height: 100px;
   z-index: 1;
 }
+
+.Login {
+  width: 60%;
+  text-align: center;
+  margin: auto;
+  min-width: 400px;
+
+  .button-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+}

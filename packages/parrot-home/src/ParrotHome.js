@@ -86,8 +86,8 @@ const ParrotHome = ({context, host}) => {
         }
     };
 
-    const categoryElement = products => (<div className="categoryItem">
-        {products && products.length > 0 && products.map(product => (<div className="productItem" key={product.uuid}>
+    const categoryElement = products => (<div className="parrot-category">
+        {products && products.length > 0 && products.map(product => (<div className="parrot-product" key={product.uuid}>
             <div className="image">
                 <img src={product.imageUrl} alt={product.name}/>
             </div>
@@ -108,16 +108,18 @@ const ParrotHome = ({context, host}) => {
         </div>))}
     </div>);
 
-    return (<div>
+    return (<div className={'Home'}>
         <h3>{_store.name}</h3>
-        <Button onClick={getProducts} data-uuid={_store.uuid}>Ver productos</Button>
-        <Button onClick={() => {
-            auth.signout(() => history.push('/login'));
-        }}>Cerrar sesión</Button>
+        <div className={'button-actions'}>
+            <Button onClick={getProducts} data-uuid={_store.uuid} variant={'secondary'}>Ver productos</Button>
+            <Button onClick={() => {
+                auth.signout(() => history.push('/login'));
+            }}>Cerrar sesión</Button>
+        </div>
         <hr/>
         <div className="products">
             {categories && categories.length > 0 && categories.map((category, categoryIndex) => (
-                <div className="product-item" key={category.uuid}>
+                <div className="parrot-products" key={category.uuid}>
                     <Accordion defaultActiveKey="0" flush>
                         <Accordion.Item eventKey={`${categoryIndex}`}>
                             <Accordion.Header>{category.name}</Accordion.Header>

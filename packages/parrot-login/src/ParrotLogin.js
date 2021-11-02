@@ -157,6 +157,7 @@ const ParrotLogin = ({context, host}) => {
                         autoFocus
                         type="email"
                         value={username}
+                        placeholder={'Ej. user-client@parrot-challenge.net'}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </Form.Group>
@@ -165,15 +166,18 @@ const ParrotLogin = ({context, host}) => {
                     <Form.Control
                         type="password"
                         value={password}
+                        placeholder={'Ej. 8mngDh3ckV7X345f'}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button size="md" type="submit" disabled={!validateForm()}>
-                    Iniciar sesión
-                </Button>
-                <Button size="md" type="button" onClick={fillDemoData}>
-                    Llenar datos de prueba
-                </Button>
+                <div className={'button-actions'}>
+                    <Button variant={'secondary'} size="md" type="submit" disabled={!validateForm()}>
+                        Iniciar sesión
+                    </Button>
+                    <Button size="md" type="button" onClick={fillDemoData}>
+                        Llenar datos de prueba
+                    </Button>
+                </div>
             </Form>
 
             <Toast show={showModal} onClose={toggleShowModal}>
