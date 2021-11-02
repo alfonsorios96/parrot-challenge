@@ -11,18 +11,18 @@ import {
 } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import {resetSession, saveSession} from '../reducers/user';
-import {Home} from './Home';
 import {RequestManager} from '@parrot/requester-manager';
 import ParrotLogin from '@parrot/login-page';
+import ParrotHome from '@parrot/home-page';
 
-const fakeAuth = {
+const Auth = {
     isAuthenticated: false,
     signin(cb) {
-        fakeAuth.isAuthenticated = true;
+        Auth.isAuthenticated = true;
         cb();
     },
     signout(cb) {
-        fakeAuth.isAuthenticated = false;
+        Auth.isAuthenticated = false;
         cb();
     }
 };
@@ -37,27 +37,23 @@ const authContext = createContext(undefined, undefined);
 
 const useProvideAuth = () => {
     const dispatch = useDispatch();
-    const [user, setUser] = useState(null);
 
     const signin = cb => {
-        return fakeAuth.signin(() => {
-            setUser("user");
+        return Auth.signin(() => {
             cb();
         });
     };
 
     const signout = cb => {
-        return fakeAuth.signout(() => {
+        return Auth.signout(() => {
             dispatch(resetSession());
             sessionStorage.removeItem('access_token');
             sessionStorage.removeItem('refresh_token');
-            setUser(null);
             cb();
         });
     };
 
     return {
-        user,
         signin,
         signout
     };
@@ -81,7 +77,9 @@ export const ParrotAuth = () => {
                             </Provider>
                         </Route>
                         <PrivateRoute path="/protected">
-                            <Home context={authContext} host={API_REST_HOST}/>
+                            <Provider store={store}>
+                                <ParrotHome context={authContext} host={API_REST_HOST}/>
+                            </Provider>
                         </PrivateRoute>
                     </Switch>
                 </div>
@@ -142,12 +140,12 @@ const PrivateRoute = ({children, ...rest}) => {
         <Route
             {...rest}
             render={({location}) => {
-                return fakeAuth.isAuthenticated ? (
+                return Auth.isAuthenticated ? (
                     children
                 ) : (
                     <Redirect
                         to={{
-                            pathname: "/login",
+                            pathname: '/login',
                             state: {from: location}
                         }}
                     />
