@@ -3,8 +3,7 @@ import {useHistory, useLocation} from 'react-router-dom';
 import {RequestManager} from '@parrot/requester-manager';
 import {Button, Form, Toast} from 'react-bootstrap';
 import {useDispatch} from 'react-redux';
-import {saveSession} from './reducers/user';
-import {toggleSpinner} from './reducers/spinner';
+import {saveSession, toggleSpinner} from '@parrot/store';
 
 import './ParrotLogin.scss';
 

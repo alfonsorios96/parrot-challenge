@@ -1,7 +1,7 @@
 import React, {useContext, createContext, useEffect} from 'react';
-import Config from '../config.json';
-import {Provider} from 'react-redux';
-import store from '../store';
+import {RequestManager} from '@parrot/requester-manager';
+import Config from './config.json';
+import {Spinner} from 'react-bootstrap';
 import {
     BrowserRouter as Router,
     Switch,
@@ -9,13 +9,12 @@ import {
     Link,
     Redirect, useHistory, useLocation
 } from 'react-router-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {resetSession, saveSession} from '../reducers/user';
-import {RequestManager} from '@parrot/requester-manager';
+// Redux imports
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import store, {resetSession, saveSession, isShowing, toggleSpinner} from '@parrot/store';
+// Pages
 import ParrotLogin from '@parrot/login-page';
 import ParrotHome from '@parrot/home-page';
-import {Spinner} from 'react-bootstrap';
-import {isShowing, toggleSpinner} from '../reducers/spinner';
 
 const Auth = {
     isAuthenticated: false,

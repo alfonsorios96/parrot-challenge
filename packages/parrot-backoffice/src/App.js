@@ -1,6 +1,6 @@
 import './App.scss';
 
-import {ParrotAuth} from './components/ParrotAuth';
+import {ParrotAuth} from './ParrotAuth';
 
 const App = () => {
 

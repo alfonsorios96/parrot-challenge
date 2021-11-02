@@ -3,10 +3,9 @@ import {Button, Accordion, Form} from 'react-bootstrap';
 import {useContext, useState} from 'react';
 import {RequestManager} from '@parrot/requester-manager';
 import {useDispatch, useSelector} from 'react-redux';
-import {selectUser} from './reducers/user';
+import {selectUser, toggleSpinner} from '@parrot/store';
 
 import './Home.scss';
-import {toggleSpinner} from './reducers/spinner';
 
 const ParrotHome = ({context, host}) => {
     const dispatch = useDispatch();

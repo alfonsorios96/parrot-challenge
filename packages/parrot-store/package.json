@@ -1,0 +1,13 @@
+{
+  "name": "@parrot/store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "store.js",
+  "module": "store.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.2"
+  }
+}

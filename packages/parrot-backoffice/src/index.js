@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 import {Provider} from 'react-redux';
-import store from './store';
+import store from '@parrot/store';
 
 import App from './App';
 
