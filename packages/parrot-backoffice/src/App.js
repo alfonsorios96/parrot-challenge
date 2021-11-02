@@ -6,7 +6,6 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
     Redirect, useHistory, useLocation
 } from 'react-router-dom';
 // Redux imports
@@ -132,6 +131,20 @@ const PrivateRoute = ({children, ...rest}) => {
     );
 };
 
+const NoMatch = () => {
+    const location = useLocation();
+
+    return (
+        <Redirect
+            to={{
+                pathname: '/login',
+                state: { from: location }
+            }}
+        />
+    );
+};
+
+
 const App = () => {
 
     const spinnerIsShowing = useSelector(isShowing);
@@ -140,25 +153,24 @@ const App = () => {
         <ProvideAuth>
             <Router>
                 <div className={`App ${spinnerIsShowing ? 'disabled' : ''}`}>
-                    <div className={'link-block'}>
-                        <Link to="/protected">Iniciar sesión</Link>
-                    </div>
-
                     <Spinner className={'spinner'} animation="border" role="status" hidden={!spinnerIsShowing}>
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>
 
                     <Switch>
-                        <Route path="/login">
+                        <Route exact path="/login">
                             <Provider store={store}>
                                 <ParrotLogin context={authContext} host={API_REST_HOST}></ParrotLogin>
                             </Provider>
                         </Route>
-                        <PrivateRoute path="/protected">
+                        <PrivateRoute exact path="/home">
                             <Provider store={store}>
                                 <ParrotHome context={authContext} host={API_REST_HOST}/>
                             </Provider>
                         </PrivateRoute>
+                        <Route path="*">
+                            <NoMatch/>
+                        </Route>
                     </Switch>
                 </div>
             </Router>
