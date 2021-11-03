@@ -83,7 +83,7 @@
     semver "^6.3.0"
     source-map "^0.5.0"
 
-"@babel/core@^7.16.0", "@babel/core@^7.4.4", "@babel/core@^7.7.2":
+"@babel/core@^7.16.0", "@babel/core@^7.7.2":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.16.0.tgz#c4ff44046f5fe310525cc9eb4ef5147f0c5374d4"
   integrity sha512-mYZEvshBRHGsIAiyH5PzCFTCfbWfoYbO/jcSdXQSUQu1/pW0xDZAUP7KEc32heqWTAfAHhV9j1vH8Sav7l+JNQ==
@@ -113,7 +113,7 @@
     jsesc "^2.5.1"
     source-map "^0.5.0"
 
-"@babel/generator@^7.16.0", "@babel/generator@^7.4.0", "@babel/generator@^7.7.2":
+"@babel/generator@^7.16.0", "@babel/generator@^7.7.2":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.16.0.tgz#d40f3d1d5075e62d3500bccb67f3daa8a95265b2"
   integrity sha512-RR8hUCfRQn9j9RPKEVXo9LiwoxLPYn6hNZlvUOR8tSnaxlD0p0+la00ZP9/SnRt6HchKr+X0fO2r8vrETiJGew==
@@ -531,7 +531,7 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.16.0.tgz#cf147d7ada0a3655e79bf4b08ee846f00a00a295"
   integrity sha512-TEHWXf0xxpi9wKVyBCmRcSSDjbJ/cl6LUdlbYUHEaNQUJGhreJbZrXT6sR4+fZLxVUJqNRB4KyOvjuy/D9009A==
 
-"@babel/parser@^7.4.3", "@babel/parser@^7.7.2":
+"@babel/parser@^7.7.2":
   version "7.16.2"
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.16.2.tgz#3723cd5c8d8773eef96ce57ea1d9b7faaccd12ac"
   integrity sha512-RUVpT0G2h6rOZwqLDTrKk7ksNv7YpAilTnYe1/Q+eDjxEceRMKVWbCsX7t8h6C1qCFi/1Y8WZjcEPBAFG27GPw==
@@ -1972,7 +1972,7 @@
     debug "^4.1.0"
     globals "^11.1.0"
 
-"@babel/traverse@^7.16.0", "@babel/traverse@^7.4.3", "@babel/traverse@^7.7.2":
+"@babel/traverse@^7.16.0", "@babel/traverse@^7.7.2":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.16.0.tgz#965df6c6bfc0a958c1e739284d3c9fa4a6e3c45b"
   integrity sha512-qQ84jIs1aRQxaGaxSysII9TuDaguZ5yVrEuC0BN2vcPlalwfLovVmCjbFDPECPXcYM/wLvNFfp8uDOliLxIoUQ==
@@ -2228,7 +2228,6 @@
     "@jest/transform" "^24.9.0"
     "@jest/types" "^24.9.0"
     jest-mock "^24.9.0"
-
 "@jest/environment@^26.6.0", "@jest/environment@^26.6.2":
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/@jest/environment/-/environment-26.6.2.tgz#ba364cc72e221e79cc8f0a99555bf5d7577cf92c"
@@ -2363,6 +2362,7 @@
     terminal-link "^2.0.0"
     v8-to-istanbul "^8.1.0"
 
+
 "@jest/source-map@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/source-map/-/source-map-24.9.0.tgz#0e263a94430be4b41da683ccc1e6bffe2a191714"
@@ -2389,6 +2389,7 @@
     callsites "^3.0.0"
     graceful-fs "^4.2.4"
     source-map "^0.6.0"
+
 
 "@jest/test-result@^24.9.0":
   version "24.9.0"
@@ -2440,6 +2441,7 @@
     jest-haste-map "^27.3.1"
     jest-runtime "^27.3.1"
 
+
 "@jest/transform@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/transform/-/transform-24.9.0.tgz#4ae2768b296553fadab09e9ec119543c90b16c56"
@@ -2461,6 +2463,7 @@
     slash "^2.0.0"
     source-map "^0.6.1"
     write-file-atomic "2.4.1"
+
 
 "@jest/transform@^26.6.2":
   version "26.6.2"
@@ -2504,6 +2507,7 @@
     source-map "^0.6.1"
     write-file-atomic "^3.0.0"
 
+
 "@jest/types@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/types/-/types-24.9.0.tgz#63cb26cb7500d069e5a389441a7c6ab5e909fc59"
@@ -2512,6 +2516,7 @@
     "@types/istanbul-lib-coverage" "^2.0.0"
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
+
 
 "@jest/types@^26.6.0", "@jest/types@^26.6.2":
   version "26.6.2"
@@ -10386,6 +10391,7 @@ jest-each@^27.3.1:
     jest-util "^27.3.1"
     pretty-format "^27.3.1"
 
+
 jest-environment-enzyme@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/jest-environment-enzyme/-/jest-environment-enzyme-7.1.2.tgz#4561f26a719e8e87ce8c9a6d3f540a92663ba8d5"
@@ -10984,7 +10990,7 @@ jest-util@^24.9.0:
     mkdirp "^0.5.1"
     slash "^2.0.0"
     source-map "^0.6.0"
-
+    
 jest-util@^26.6.0, jest-util@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/jest-util/-/jest-util-26.6.2.tgz#907535dbe4d5a6cb4c47ac9b926f6af29576cbc1"
@@ -11170,7 +11176,7 @@ jsdom@^11.5.1:
     whatwg-url "^6.4.1"
     ws "^5.2.0"
     xml-name-validator "^3.0.0"
-
+    
 jsdom@^16.4.0, jsdom@^16.6.0:
   version "16.7.0"
   resolved "https://registry.yarnpkg.com/jsdom/-/jsdom-16.7.0.tgz#918ae71965424b197c819f8183a754e18977b710"
@@ -15946,7 +15952,7 @@ stack-utils@^1.0.1:
   integrity sha512-KZiTzuV3CnSnSvgMRrARVCj+Ht7rMbauGDK0LdVFRGyenwdylpajAp4Q0i6SX8rEmbTpMMf6ryq2gb8pPq2WgQ==
   dependencies:
     escape-string-regexp "^2.0.0"
-
+    
 stack-utils@^2.0.2, stack-utils@^2.0.3:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-2.0.5.tgz#d25265fca995154659dbbfba3b49254778d2fdd5"
