@@ -1,0 +1,36 @@
+.Home {
+  width: 90%;
+  text-align: center;
+  margin: auto;
+
+  img {
+    width: 200px;
+    height: 140px;
+  }
+
+  .button-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .parrot-category {
+    .parrot-product {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+      margin-left: 20%;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .Home {
+    .parrot-category {
+      .parrot-product {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}

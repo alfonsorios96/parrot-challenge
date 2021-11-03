@@ -22,6 +22,9 @@ export class RequestManager {
             body = JSON.stringify(config.body);
             params.body = body;
         }
+        if(config.before && typeof config.before === 'function') {
+            config.before();
+        }
         const response = await fetch(`${host}/${endpoint}`, params);
         if (config.callbacks && config.callbacks.length > 0) {
             for (const callback of config.callbacks) {
@@ -29,6 +32,9 @@ export class RequestManager {
                     callback.action(response);
                 }
             }
+        }
+        if(config.after && typeof config.after === 'function') {
+            config.after();
         }
         return await response.json();
     }

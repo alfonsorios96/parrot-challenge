@@ -1,0 +1,21 @@
+{
+  "name": "@parrot/store",
+  "version": "1.0.0",
+  "description": "",
+  "main": "store.js",
+  "module": "store.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "test:watch": "npm test -- --watch"
+  },
+  "devDependencies": {
+    "babel-jest": "^27.3.1",
+    "jest": "^27.3.1"
+  }
+}

@@ -3,9 +3,13 @@ import {useHistory, useLocation} from 'react-router-dom';
 import {RequestManager} from '@parrot/requester-manager';
 import {Button, Form, Toast} from 'react-bootstrap';
 import {useDispatch} from 'react-redux';
-import {saveSession} from "../reducers/user";
+import {saveSession, toggleSpinner} from '@parrot/store';
 
-export const Login = ({context, host}) => {
+import './ParrotLogin.scss';
+
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+const ParrotLogin = ({context, host}) => {
     const dispatch = useDispatch();
     const history = useHistory();
     const auth = useContext(context);
@@ -25,6 +29,12 @@ export const Login = ({context, host}) => {
                 endpoint: 'api/auth/token/test',
                 headers: {
                     'Authorization': `Bearer ${access_token}`
+                },
+                before: () => {
+                    dispatch(toggleSpinner(true));
+                },
+                after: () => {
+                    dispatch(toggleSpinner(false));
                 }
             }).then(payload => {
                 if (payload.status === 'ok') {
@@ -46,10 +56,10 @@ export const Login = ({context, host}) => {
         return function cleanup() {
             // TODO Clean listeners
         };
-    });
+    }, []);
 
     const validateForm = () => {
-        return username.length > 0 && password.length > 0;
+        return EMAIL_REGEX.test(username) && password.length > 0;
     };
 
     const login = async (event) => {
@@ -102,7 +112,13 @@ export const Login = ({context, host}) => {
                             })
                         }
                     }
-                ]
+                ],
+                before: () => {
+                    dispatch(toggleSpinner(true));
+                },
+                after: () => {
+                    dispatch(toggleSpinner(false));
+                }
             });
             if (access_token && access_token !== '' && refresh_token && refresh_token !== '')
                 auth.signin(() => {
@@ -143,6 +159,7 @@ export const Login = ({context, host}) => {
                         autoFocus
                         type="email"
                         value={username}
+                        placeholder={'Ej. user-client@parrot-challenge.net'}
                         onChange={(e) => setUsername(e.target.value)}
                     />
                 </Form.Group>
@@ -151,15 +168,18 @@ export const Login = ({context, host}) => {
                     <Form.Control
                         type="password"
                         value={password}
+                        placeholder={'Ej. 8mngDh3ckV7X345f'}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button size="md" type="submit" disabled={!validateForm()}>
-                    Iniciar sesión
-                </Button>
-                <Button size="md" type="button" onClick={fillDemoData}>
-                    Llenar datos de prueba
-                </Button>
+                <div className={'button-actions'}>
+                    <Button variant={'secondary'} size="md" type="submit" disabled={!validateForm()}>
+                        Iniciar sesión
+                    </Button>
+                    <Button size="md" type="button" onClick={fillDemoData}>
+                        Llenar datos de prueba
+                    </Button>
+                </div>
             </Form>
 
             <Toast show={showModal} onClose={toggleShowModal}>
@@ -188,3 +208,5 @@ export const Login = ({context, host}) => {
         </div>
     );
 }
+
+export default ParrotLogin;

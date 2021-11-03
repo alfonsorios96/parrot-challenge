@@ -1,40 +1,116 @@
 @import "~bootstrap/scss/bootstrap";
+@import "theme";
 
 .App {
   text-align: center;
+  width: 100%;
+  height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
+.disabled {
   pointer-events: none;
+  opacity: 0.5;
+  background: var(--parrot-color-soft, $parrot-color-5);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.spinner {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  z-index: 1;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+// Parrot elements
+
+.btn {
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 180px;
+  min-height: 48px;
+  padding: 15px 20px;
+  display: inline-flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: transparent;
 }
 
-.App-link {
-  color: #61dafb;
+.btn-primary {
+  background-color: var(--parrot-color-black, $parrot-color-2);
+  color: var(--parrot-color-white, $parrot-color-3);
+  border: 1px solid var(--parrot-color-black, $parrot-color-2);
+  border-radius: 4px;
+
+  &:disabled {
+    background-color: var(--parrot-color-white, $parrot-color-3);
+    color: var(--parrot-color-black, $parrot-color-2);
+    border: 1px solid var(--parrot-color-black, $parrot-color-2);
+    border-radius: 4px;
+  }
+
+  &:active, &:focus {
+    background-color: var(--parrot-color-black, $parrot-color-2);
+    color: var(--parrot-color-white, $parrot-color-3);
+    border: 1px solid var(--parrot-color-gray, $parrot-color-4);
+    box-shadow: none;
+  }
+
+  &:hover {
+    background-color: var(--parrot-color-gray, $parrot-color-4);
+    border: 1px solid var(--parrot-color-gray, $parrot-color-4);
+    box-shadow: none;
+  }
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.btn-secondary {
+  border: 1px solid var(--parrot-color-black, $parrot-color-2);
+  border-radius: 4px;
+  color: var(--parrot-color-black, $parrot-color-2);
+
+  &:disabled {
+    background-color: var(--parrot-color-white, $parrot-color-3);
+    color: var(--parrot-color-black, $parrot-color-2);
+    border: 1px solid var(--parrot-color-black, $parrot-color-2);
+    border-radius: 4px;
   }
-  to {
-    transform: rotate(360deg);
+
+  &:active, &:focus {
+    color: var(--parrot-color-white, $parrot-color-3);
+    background-color: var(--parrot-color-black, $parrot-color-2);
+    border: 1px solid var(--parrot-color-gray, $parrot-color-4);
+    box-shadow: none;
   }
+
+  &:hover {
+    color: var(--parrot-color-black, $parrot-color-2);
+    background-color: var(--parrot-color-soft, $parrot-color-5);
+    border: 1px solid var(--parrot-color-gray, $parrot-color-4);
+    box-shadow: none;
+  }
+}
+
+.form-check-input {
+  &:checked {
+    background-color: var(--parrot-color-orange, $parrot-color-1);
+    border-color: var(--parrot-color-orange, $parrot-color-1);
+  }
+}
+
+.accordion-button:not(.collapsed){
+  color: var(--parrot-color-orange, $parrot-color-1);
+  background-color: var(--parrot-color-soft, $parrot-color-5);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
+}
+
+.accordion-button:focus {
+  border-color: var(--parrot-color-orange, $parrot-color-1);
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.125);
+}
+
+.spinner-border {
+  color: var(--parrot-color-orange, $parrot-color-1);
 }
