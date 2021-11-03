@@ -44,18 +44,13 @@ const ParrotLogin = ({context, host}) => {
                             refresh_token: sessionStorage.getItem('refresh_token')
                         }));
                     });
+                    from.pathname = '/home';
                     history.replace(from);
                 }
             }).catch(error => {
-                // TODO Handle error
                 history.replace(from);
-            }).finally(() => {
-                // TODO Finally
-            })
+            });
         }
-        return function cleanup() {
-            // TODO Clean listeners
-        };
     }, []);
 
     const validateForm = () => {
